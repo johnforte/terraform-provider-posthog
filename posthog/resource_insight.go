@@ -38,6 +38,9 @@ func (r *insightResource) Schema(_ context.Context, req resource.SchemaRequest, 
 		},
 	}
 }
+func (r *insightResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+
+}
 
 func (r *insightResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_insight"
