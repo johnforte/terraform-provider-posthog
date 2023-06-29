@@ -6,13 +6,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"go/types"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 type posthogProvider struct{}
 
 func New() provider.Provider {
 	return &posthogProvider{}
+}
+
+func (p *posthogProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+
 }
 
 func (p *posthogProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
