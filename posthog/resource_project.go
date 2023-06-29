@@ -24,6 +24,10 @@ func (r *projectResource) Configure(ctx context.Context, req resource.ConfigureR
 
 }
 
+func (r *projectResource) Schema(_ context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+
+}
+
 func (r *projectResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 
 }
