@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	err := providerserver.Serve(context.Background(), posthog.New)
+	err := providerserver.Serve(context.Background(), posthog.New, providerserver.ServeOpts{})
 	if err != nil {
 		log.Fatalf("unable to serve provider: %s", err)
 	}
