@@ -8,6 +8,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 )
 
+type insightResource struct {
+}
+
 var (
 	_ resource.Resource              = &insightResource{}
 	_ resource.ResourceWithConfigure = &insightResource{}
