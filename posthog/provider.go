@@ -16,7 +16,16 @@ func New() provider.Provider {
 }
 
 func (p *posthogProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	var config providerData
+	diags := req.Config.Get(ctx, &config)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	client :=new Client{personal_api_token: config.PersonalAPIToken, project_id: config.ProjectId}
 
+	resp.DataSourceData = client
+	resp.ResourceData = client
 }
 
 func (p *posthogProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
