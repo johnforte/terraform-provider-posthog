@@ -17,7 +17,7 @@ func newClient(personal_api_token string, project_id string) *Client {
 	return &Client{
 		personal_api_token: personal_api_token,
 		project_id:         project_id,
-		baseURL:            "https://app.posthog.com/api/",
+		baseURL:            "https://app.posthog.com/api/projects/" + project_id + "/",
 	}
 }
 func (c *Client) doRequest(method string, path string, body ...string) string {
@@ -31,6 +31,7 @@ func (c *Client) doRequest(method string, path string, body ...string) string {
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Errored when sending request to the posthog")
+		fmt.Println(err)
 		return ""
 	}
 	defer resp.Body.Close()

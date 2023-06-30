@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"net/http"
 )
 
@@ -27,15 +25,16 @@ func (r *insightResource) Schema(_ context.Context, req resource.SchemaRequest, 
 	resp.Schema = schema.Schema{
 		Description: ``,
 		Attributes: map[string]schema.Attribute{
-			"query": schema.StringAttribute{
-				Description:   "",
-				Required:      true,
-				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
+			"id": schema.Int64Attribute{
+				Computed: true,
 			},
-			"derived_name": schema.StringAttribute{
+			"short_id": schema.StringAttribute{
 				Computed: true,
 			},
 			"name": schema.StringAttribute{
+				Required: true,
+			},
+			"derived_name": schema.StringAttribute{
 				Required: true,
 			},
 		},
@@ -71,7 +70,18 @@ func (r *insightResource) Create(ctx context.Context, req resource.CreateRequest
 }
 
 func (r *insightResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-
+	var state Insight
+	diags := req.State.Get(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	response := r.client.doRequest(http.MethodGet, fmt.Sprintf("insights/%d", state.Id))
+	diags = resp.State.Set(ctx, response)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 }
 
 func (r *insightResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {

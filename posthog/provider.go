@@ -37,13 +37,13 @@ func (p *posthogProvider) Schema(_ context.Context, req provider.SchemaRequest, 
 		Description: `PostHog Provider for Terraform`,
 		Attributes: map[string]schema.Attribute{
 			"personal_api_token": schema.StringAttribute{
-				Optional:    true,
 				Description: "This is your personal api token.",
 				Sensitive:   true,
+				Required:    true,
 			},
 			"project_id": schema.StringAttribute{
-				Optional:    true,
 				Description: "This is your project id to run terraform against.",
+				Required:    true,
 			},
 		},
 	}
