@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"net/http"
 )
 
@@ -32,10 +34,12 @@ func (r *insightResource) Schema(_ context.Context, req resource.SchemaRequest, 
 				Computed: true,
 			},
 			"name": schema.StringAttribute{
-				Required: true,
+				Required:      true,
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 			"derived_name": schema.StringAttribute{
-				Required: true,
+				Required:      true,
+				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 		},
 	}
@@ -65,8 +69,17 @@ func (r *insightResource) Create(ctx context.Context, req resource.CreateRequest
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	out := r.client.doRequest(http.MethodPost, "insights")
-	fmt.Print(out)
+	out := r.client.doRequest(http.MethodPost, "insights", []byte(fmt.Sprintf(`{
+		"name":%s,
+		"derived_name":%s
+	}`, plan.Name, plan.DerivedName)))
+	result := convertResponseToInsight(out)
+	fmt.Println(result)
+	diags = resp.State.Set(ctx, result)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 }
 
 func (r *insightResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
@@ -76,7 +89,7 @@ func (r *insightResource) Read(ctx context.Context, req resource.ReadRequest, re
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	response := r.client.doRequest(http.MethodGet, fmt.Sprintf("insights/%d", state.Id))
+	response := r.client.doRequest(http.MethodGet, fmt.Sprintf("insights/%d", state.Id), nil)
 	diags = resp.State.Set(ctx, response)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
