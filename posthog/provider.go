@@ -22,10 +22,10 @@ func (p *posthogProvider) Configure(ctx context.Context, req provider.ConfigureR
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	client :=new Client{personal_api_token: config.PersonalAPIToken, project_id: config.ProjectId}
+	c := newClient(config.PersonalAPIToken.ValueString(), config.ProjectId.ValueString())
 
-	resp.DataSourceData = client
-	resp.ResourceData = client
+	resp.DataSourceData = c
+	resp.ResourceData = c
 }
 
 func (p *posthogProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
