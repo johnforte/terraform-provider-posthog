@@ -20,11 +20,11 @@ type InsightRequest struct {
 	Filter      map[string]string `json:"filter"`
 }
 type InsightResponse struct {
-	id           int64             `json:"id"`
-	short_id     string            `json:"short_id"`
-	name         string            `json:"name"`
-	derived_name string            `json:"derived_name"`
-	filter       map[string]string `json:"filter"`
+	Id          int64             `json:"id"`
+	ShortId     string            `json:"short_id"`
+	Name        string            `json:"name"`
+	DerivedName string            `json:"derived_name"`
+	Filter      map[string]string `json:"filter"`
 }
 
 func convertResponseToInsight(response io.Reader) Insight {
