@@ -79,8 +79,8 @@ func (r *insightResource) Create(ctx context.Context, req resource.CreateRequest
 		diags.FromErr(err)
 		return
 	}
-	//out := r.client.doRequest(http.MethodPost, "insights", body)
-	//result := convertResponseToInsight(out)
+	out := r.client.doRequest(http.MethodPost, "insights", body)
+	result := convertResponseToInsight(out)
 	fmt.Println(body)
 	diags = resp.State.Set(ctx, result)
 	resp.Diagnostics.Append(diags...)
