@@ -70,9 +70,9 @@ func (r *insightResource) Create(ctx context.Context, req resource.CreateRequest
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	insightJson := Insight{
-		name:         plan.Name,
-		derived_name: plan.DerivedName,
+	insightJson := InsightRequest{
+		Name:        plan.Name.ValueString(),
+		DerivedName: plan.DerivedName.ValueString(),
 	}
 	body, err := json.Marshal(insightJson)
 	if err != nil {
