@@ -24,18 +24,18 @@ type InsightResponse struct {
 }
 
 func convertResponseToInsight(response io.Reader) Insight {
-	var profile InsightResponse
+	var insight InsightResponse
 	decoder := json.NewDecoder(response)
-	err := decoder.Decode(&profile)
+	err := decoder.Decode(&insight)
 	if err != nil {
 		return Insight{}
 	}
-	fmt.Println(profile)
+	fmt.Println(insight)
 	return Insight{
-		Id:          types.Int64Value(profile.id),
-		ShortId:     types.StringValue(profile.short_id),
-		Name:        types.StringValue(profile.name),
-		DerivedName: types.StringValue(profile.derived_name),
-		Filter:      types.MapValue(profile.filter),
+		Id:          types.Int64Value(insight.id),
+		ShortId:     types.StringValue(insight.short_id),
+		Name:        types.StringValue(insight.name),
+		DerivedName: types.StringValue(insight.derived_name),
+		Filter:      types.MapValue(types.StringType, insight.filter),
 	}
 }
