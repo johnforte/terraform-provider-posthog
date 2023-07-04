@@ -2,6 +2,7 @@ package posthog
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -69,12 +70,18 @@ func (r *insightResource) Create(ctx context.Context, req resource.CreateRequest
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	out := r.client.doRequest(http.MethodPost, "insights", []byte(fmt.Sprintf(`{
-		"name":%s,
-		"derived_name":%s
-	}`, plan.Name, plan.DerivedName)))
-	result := convertResponseToInsight(out)
-	fmt.Println(result)
+	insightJson := Insight{
+		name:         plan.Name,
+		derived_name: plan.DerivedName,
+	}
+	body, err := json.Marshal(insightJson)
+	if err != nil {
+		diags.FromErr(err)
+		return
+	}
+	//out := r.client.doRequest(http.MethodPost, "insights", body)
+	//result := convertResponseToInsight(out)
+	fmt.Println(body)
 	diags = resp.State.Set(ctx, result)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
