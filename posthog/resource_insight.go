@@ -105,7 +105,27 @@ func (r *insightResource) Read(ctx context.Context, req resource.ReadRequest, re
 }
 
 func (r *insightResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-
+	var plan Insight
+	diags := req.State.Get(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	insightJson := InsightRequest{
+		Name:        plan.Name.ValueString(),
+		DerivedName: plan.DerivedName.ValueString(),
+	}
+	body, err := json.Marshal(insightJson)
+	if err != nil {
+		diags.FromErr(err)
+		return
+	}
+	response := r.client.doRequest(http.MethodPatch, fmt.Sprintf("insights/%d", state.Id), body)
+	diags = resp.State.Set(ctx, response)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 }
 
 func (r *insightResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
