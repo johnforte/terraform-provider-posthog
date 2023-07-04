@@ -2,7 +2,6 @@ package posthog
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"io"
 )
@@ -34,12 +33,11 @@ func convertResponseToInsight(response io.Reader) Insight {
 	if err != nil {
 		return Insight{}
 	}
-	fmt.Println(insight)
 	return Insight{
-		Id:          types.Int64Value(insight.id),
-		ShortId:     types.StringValue(insight.short_id),
-		Name:        types.StringValue(insight.name),
-		DerivedName: types.StringValue(insight.derived_name),
-		Filter:      types.MapValue(types.StringType, insight.filter),
+		Id:          types.Int64Value(insight.Id),
+		ShortId:     types.StringValue(insight.ShortId),
+		Name:        types.StringValue(insight.Name),
+		DerivedName: types.StringValue(insight.DerivedName),
+		Filter:      types.MapValue(types.StringType, insight.Filter),
 	}
 }

@@ -42,6 +42,7 @@ func (r *insightResource) Schema(_ context.Context, req resource.SchemaRequest, 
 				Required:      true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
+			"filter": schema.SetAttribute{},
 		},
 	}
 }
@@ -76,7 +77,6 @@ func (r *insightResource) Create(ctx context.Context, req resource.CreateRequest
 	}
 	body, err := json.Marshal(insightJson)
 	if err != nil {
-		diags.FromErr(err)
 		return
 	}
 	out := r.client.doRequest(http.MethodPost, "insights", body)
@@ -106,7 +106,7 @@ func (r *insightResource) Read(ctx context.Context, req resource.ReadRequest, re
 
 func (r *insightResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan Insight
-	diags := req.State.Get(ctx, &state)
+	diags := req.State.Get(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -117,10 +117,9 @@ func (r *insightResource) Update(ctx context.Context, req resource.UpdateRequest
 	}
 	body, err := json.Marshal(insightJson)
 	if err != nil {
-		diags.FromErr(err)
 		return
 	}
-	response := r.client.doRequest(http.MethodPatch, fmt.Sprintf("insights/%d", state.Id), body)
+	response := r.client.doRequest(http.MethodPatch, fmt.Sprintf("insights/%d", plan.Id), body)
 	diags = resp.State.Set(ctx, response)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
