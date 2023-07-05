@@ -11,19 +11,19 @@ type Insight struct {
 	ShortId     types.String `tfsdk:"short_id"`
 	Name        types.String `tfsdk:"name"`
 	DerivedName types.String `tfsdk:"derived_name"`
-	Filter      types.Map    `tfsdk:"filter"`
+	Filter      any          `tfsdk:"filter"`
 }
 type InsightRequest struct {
-	Name        string            `json:"name"`
-	DerivedName string            `json:"derived_name"`
-	Filter      map[string]string `json:"filter"`
+	Name        string `json:"name"`
+	DerivedName string `json:"derived_name"`
+	Filter      any    `json:"filter"`
 }
 type InsightResponse struct {
-	Id          int64             `json:"id"`
-	ShortId     string            `json:"short_id"`
-	Name        string            `json:"name"`
-	DerivedName string            `json:"derived_name"`
-	Filter      map[string]string `json:"filter"`
+	Id          int64  `json:"id"`
+	ShortId     string `json:"short_id"`
+	Name        string `json:"name"`
+	DerivedName string `json:"derived_name"`
+	Filter      any    `json:"filter"`
 }
 
 func convertResponseToInsight(response io.Reader) Insight {
@@ -38,6 +38,6 @@ func convertResponseToInsight(response io.Reader) Insight {
 		ShortId:     types.StringValue(insight.ShortId),
 		Name:        types.StringValue(insight.Name),
 		DerivedName: types.StringValue(insight.DerivedName),
-		Filter:      types.MapValue(types.StringType, insight.Filter),
+		Filter:      insight.Filter,
 	}
 }

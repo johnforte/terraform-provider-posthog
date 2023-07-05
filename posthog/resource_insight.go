@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"net/http"
 )
 
@@ -42,7 +44,11 @@ func (r *insightResource) Schema(_ context.Context, req resource.SchemaRequest, 
 				Required:      true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
-			"filter": schema.SetAttribute{},
+			"filter": schema.MapAttribute{
+				ElementType:   types.StringType,
+				Optional:      true,
+				PlanModifiers: []planmodifier.Map{mapplanmodifier.RequiresReplace()},
+			},
 		},
 	}
 }
@@ -74,6 +80,7 @@ func (r *insightResource) Create(ctx context.Context, req resource.CreateRequest
 	insightJson := InsightRequest{
 		Name:        plan.Name.ValueString(),
 		DerivedName: plan.DerivedName.ValueString(),
+		Filter:      plan.Filter,
 	}
 	body, err := json.Marshal(insightJson)
 	if err != nil {
