@@ -135,5 +135,11 @@ func (r *insightResource) Update(ctx context.Context, req resource.UpdateRequest
 }
 
 func (r *insightResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-
+	var plan Insight
+	diags := req.State.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	r.client.doRequest(http.MethodDelete, fmt.Sprintf("insights/%d", plan.Id), nil)
 }
