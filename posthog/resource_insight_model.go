@@ -16,9 +16,9 @@ type Insight struct {
 	Filter      types.Map    `tfsdk:"filter"`
 }
 type InsightRequest struct {
-	Name        string                `json:"name"`
-	DerivedName string                `json:"derived_name"`
-	Filter      map[string]attr.Value `json:"filter"`
+	Name        string `json:"name"`
+	DerivedName string `json:"derived_name"`
+	Filter      any    `json:"filter"`
 }
 type InsightResponse struct {
 	Id          int64             `json:"id"`
