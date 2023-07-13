@@ -27,12 +27,12 @@ func (c *Client) doRequest(method string, path string, body []byte) io.Reader {
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.personal_api_token))
 	resp, err := client.Do(req)
+	defer resp.Body.Close()
 	if err != nil {
 		fmt.Println("Errored when sending request to the posthog")
-		fmt.Println(err)
+		fmt.Println(err.Error())
 		return nil
 	}
-	defer resp.Body.Close()
 	responseBody, _ := ioutil.ReadAll(resp.Body)
 	return bytes.NewReader(responseBody)
 }
