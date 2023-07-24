@@ -2,7 +2,7 @@ module github.com/johnforte/terraform-provider-posthog
 
 go 1.19
 
-require github.com/hashicorp/terraform-plugin-framework v1.3.2
+require github.com/hashicorp/terraform-plugin-framework v1.3.3
 
 require (
 	github.com/fatih/color v1.13.0 // indirect
